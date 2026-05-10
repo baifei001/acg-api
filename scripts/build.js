@@ -208,6 +208,45 @@ async function main() {
     }
   }
 
+  // Generate static HTML redirect files in img/ directory
+  const IMG_DIR = path.join(__dirname, '..', 'img');
+  if (!fs.existsSync(IMG_DIR)) {
+    fs.mkdirSync(IMG_DIR, { recursive: true });
+  }
+
+  function makeRedirectHtml(imageUrl) {
+    return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="refresh" content="0;url=${imageUrl}">
+  <title>Redirecting...</title>
+</head>
+<body>
+  <p>Redirecting to <a href="${imageUrl}">${imageUrl}</a>...</p>
+</body>
+</html>`;
+  }
+
+  // img/random.html
+  if (allImages.length > 0) {
+    const randomImg = allImages[Math.floor(Math.random() * allImages.length)];
+    fs.writeFileSync(path.join(IMG_DIR, 'random.html'), makeRedirectHtml(randomImg.url));
+  }
+
+  // img/{category}.html for each category
+  for (const [category, images] of Object.entries(allCategories)) {
+    const catImages = images.map(img => ({
+      url: img.url.startsWith('http') ? img.url : `https://baifei001.github.io/acg-api/${img.url}`,
+      category,
+      type: img.type
+    }));
+    if (catImages.length > 0) {
+      const randomImg = catImages[Math.floor(Math.random() * catImages.length)];
+      fs.writeFileSync(path.join(IMG_DIR, `${category}.html`), makeRedirectHtml(randomImg.url));
+    }
+  }
+
   // Print summary
   const totalImages = Object.values(allCategories).reduce((sum, imgs) => sum + imgs.length, 0);
   const totalCategories = Object.keys(allCategories).length;
