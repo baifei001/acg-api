@@ -16,11 +16,12 @@ curl https://baifei001.github.io/acg-api/api/anime.json
 
 ### 批量获取随机图片
 ```bash
-# 获取 5 张随机图片
-curl "https://baifei001.github.io/acg-api/api/random.json?size=5"
+# 浏览器访问（支持参数）
+https://baifei001.github.io/acg-api/?api=random&size=5
+https://baifei001.github.io/acg-api/?api=random&category=anime&size=3
 
-# 获取指定分类的 3 张图片
-curl "https://baifei001.github.io/acg-api/api/random.json?category=anime&size=3"
+# curl 只能访问静态文件（不支持参数）
+curl https://baifei001.github.io/acg-api/api/random.json
 ```
 
 ### 获取所有分类
