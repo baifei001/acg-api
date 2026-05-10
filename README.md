@@ -14,15 +14,12 @@ curl https://baifei001.github.io/acg-api/api/random.json
 curl https://baifei001.github.io/acg-api/api/anime.json
 ```
 
-### 批量获取随机图片
-```bash
-# 浏览器访问（支持参数）
+### 批量获取（仅浏览器支持）
+```
 https://baifei001.github.io/acg-api/?api=random&size=5
 https://baifei001.github.io/acg-api/?api=random&category=anime&size=3
-
-# curl 只能访问静态文件（不支持参数）
-curl https://baifei001.github.io/acg-api/api/random.json
 ```
+> 注意：批量获取需要浏览器执行 JavaScript，curl 不支持
 
 ### 获取所有分类
 ```bash
