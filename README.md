@@ -1,53 +1,53 @@
 # ACG API
 
-Random Image API hosted on GitHub Pages. Supports JSON responses and client-side redirects.
+基于 GitHub Pages 的随机图片接口，支持 JSON 响应和客户端跳转。
 
-## Usage
+## 使用方式
 
-### Get Random Image (JSON)
+### 获取随机图片（JSON）
 ```bash
 curl https://your-username.github.io/acg-api/api/random
 ```
 
-### Get Random Image by Category
+### 按分类获取随机图片
 ```bash
 curl https://your-username.github.io/acg-api/api/random?category=anime
 ```
 
-### Get Multiple Random Images
+### 获取多张随机图片
 ```bash
 curl https://your-username.github.io/acg-api/api/random?category=anime&size=5
 ```
 
-### Get All Categories
+### 获取所有分类
 ```bash
 curl https://your-username.github.io/acg-api/api/categories
 ```
 
-### Direct Image Redirect
-Open in browser: `https://your-username.github.io/acg-api/img/random`
+### 直接跳转到随机图片
+浏览器访问：`https://your-username.github.io/acg-api/img/random`
 
-## Adding Images
+## 添加图片
 
-### Local Images
-1. Add images to `images/<category>/` directory
-2. Push to main branch
-3. GitHub Actions will auto-build the index
+### 本地图片
+1. 将图片放入 `images/分类名/` 目录
+2. Push 到 main 分支
+3. GitHub Actions 自动更新索引
 
-### External Sources
-1. Edit `data/external.json`
-2. Push to main branch
+### 外部源
+1. 编辑 `data/external.json`，添加外部 API 配置
+2. Push 到 main 分支
 
-## Development
+## 开发
 
 ```bash
-# Build image index
+# 构建图片索引
 node scripts/build.js
 
-# Start local server
+# 启动本地服务器
 npx serve .
 ```
 
-## License
+## 许可证
 
 MIT
