@@ -103,8 +103,17 @@ async function handleImgRandom(params) {
 
 async function route() {
   const url = new URL(window.location.href);
-  const pathname = url.pathname.replace(/\/+$/, '') || '/';
+  let pathname = url.pathname.replace(/\/+$/, '') || '/';
   const params = url.searchParams;
+
+  // Handle SPA redirect from 404.html
+  const spaParam = params.get('spa');
+  if (spaParam) {
+    const spaUrl = new URL(spaParam, window.location.origin);
+    pathname = spaUrl.pathname.replace(/\/+$/, '') || '/';
+    // Merge query parameters from the original path
+    spaUrl.searchParams.forEach((v, k) => params.set(k, v));
+  }
 
   try {
     if (pathname.endsWith('/api/random')) {
