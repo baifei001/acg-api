@@ -273,7 +273,7 @@ async function main() {
 <body>
   <p>Redirecting...</p>
   <script>
-    fetch('data/images.json?t=' + Date.now())
+    fetch('/acg-api/data/images.json?t=' + Date.now())
       .then(r => r.json())
       .then(data => {
         const images = data.categories && data.categories['${category}'];
@@ -306,7 +306,7 @@ async function main() {
 <body>
   <p>Redirecting...</p>
   <script>
-    fetch('data/images.json?t=' + Date.now())
+    fetch('/acg-api/data/images.json?t=' + Date.now())
       .then(r => r.json())
       .then(data => {
         const allImages = [];
