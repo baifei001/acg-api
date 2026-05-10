@@ -124,6 +124,7 @@ async function route() {
 
   try {
     // Query parameter API (for fetch/programmatic calls)
+    // Must check API params BEFORE checking root path
     const api = params.get('api');
     if (api === 'random') return await handleApiRandom(params);
     if (api === 'categories') return await handleApiCategories();
@@ -134,7 +135,7 @@ async function route() {
     if (pathname.endsWith('/api/categories')) return await handleApiCategories();
     if (pathname.endsWith('/img/random')) return await handleImgRandom(params);
 
-    // Home page
+    // Home page (no API params)
     if (pathname === '/' || pathname === getBaseUrl() || pathname === getBaseUrl() + '/') {
       return await handleRoot();
     }
