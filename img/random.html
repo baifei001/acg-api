@@ -2,10 +2,29 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="refresh" content="0;url=https://baifei001.github.io/acg-api/images/anime/20260510_143002_01.webp">
   <title>Redirecting...</title>
 </head>
 <body>
-  <p>Redirecting to <a href="https://baifei001.github.io/acg-api/images/anime/20260510_143002_01.webp">https://baifei001.github.io/acg-api/images/anime/20260510_143002_01.webp</a>...</p>
+  <p>Redirecting...</p>
+  <script>
+    fetch('data/images.json')
+      .then(r => r.json())
+      .then(data => {
+        const allImages = [];
+        for (const [cat, imgs] of Object.entries(data.categories || {})) {
+          imgs.forEach(img => allImages.push({ url: img.url, category: cat }));
+        }
+        if (allImages.length === 0) {
+          document.body.innerHTML = '<p>No image available</p>';
+          return;
+        }
+        const randomImg = allImages[Math.floor(Math.random() * allImages.length)];
+        const fullUrl = randomImg.url.startsWith('http') ? randomImg.url : 'https://baifei001.github.io/acg-api/' + randomImg.url;
+        window.location.replace(fullUrl);
+      })
+      .catch(() => {
+        document.body.innerHTML = '<p>Failed to load</p>';
+      });
+  </script>
 </body>
 </html>

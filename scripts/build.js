@@ -260,36 +260,78 @@ async function main() {
     fs.mkdirSync(IMG_DIR, { recursive: true });
   }
 
-  function makeRedirectHtml(imageUrl) {
+  function makeRedirectHtml(category) {
     return `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="refresh" content="0;url=${imageUrl}">
   <title>Redirecting...</title>
 </head>
 <body>
-  <p>Redirecting to <a href="${imageUrl}">${imageUrl}</a>...</p>
+  <p>Redirecting...</p>
+  <script>
+    fetch('data/images.json')
+      .then(r => r.json())
+      .then(data => {
+        const images = data.categories && data.categories['${category}'];
+        if (!images || images.length === 0) {
+          document.body.innerHTML = '<p>No image available</p>';
+          return;
+        }
+        const randomImg = images[Math.floor(Math.random() * images.length)];
+        const fullUrl = randomImg.url.startsWith('http') ? randomImg.url : 'https://baifei001.github.io/acg-api/' + randomImg.url;
+        window.location.replace(fullUrl);
+      })
+      .catch(() => {
+        document.body.innerHTML = '<p>Failed to load</p>';
+      });
+  </script>
+</body>
+</html>`;
+  }
+
+  function makeRandomRedirectHtml() {
+    return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting...</title>
+</head>
+<body>
+  <p>Redirecting...</p>
+  <script>
+    fetch('data/images.json')
+      .then(r => r.json())
+      .then(data => {
+        const allImages = [];
+        for (const [cat, imgs] of Object.entries(data.categories || {})) {
+          imgs.forEach(img => allImages.push({ url: img.url, category: cat }));
+        }
+        if (allImages.length === 0) {
+          document.body.innerHTML = '<p>No image available</p>';
+          return;
+        }
+        const randomImg = allImages[Math.floor(Math.random() * allImages.length)];
+        const fullUrl = randomImg.url.startsWith('http') ? randomImg.url : 'https://baifei001.github.io/acg-api/' + randomImg.url;
+        window.location.replace(fullUrl);
+      })
+      .catch(() => {
+        document.body.innerHTML = '<p>Failed to load</p>';
+      });
+  </script>
 </body>
 </html>`;
   }
 
   // img/random.html
   if (allImages.length > 0) {
-    const randomImg = allImages[Math.floor(Math.random() * allImages.length)];
-    fs.writeFileSync(path.join(IMG_DIR, 'random.html'), makeRedirectHtml(randomImg.url));
+    fs.writeFileSync(path.join(IMG_DIR, 'random.html'), makeRandomRedirectHtml());
   }
 
   // img/{category}.html for each category
   for (const [category, images] of Object.entries(allCategories)) {
-    const catImages = images.map(img => ({
-      url: img.url.startsWith('http') ? img.url : `https://baifei001.github.io/acg-api/${img.url}`,
-      category,
-      type: img.type
-    }));
-    if (catImages.length > 0) {
-      const randomImg = catImages[Math.floor(Math.random() * catImages.length)];
-      fs.writeFileSync(path.join(IMG_DIR, `${category}.html`), makeRedirectHtml(randomImg.url));
+    if (images.length > 0) {
+      fs.writeFileSync(path.join(IMG_DIR, `${category}.html`), makeRedirectHtml(category));
     }
   }
 
