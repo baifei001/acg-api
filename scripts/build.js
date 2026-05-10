@@ -53,6 +53,8 @@ async function scanLocalImages() {
       });
 
     const images = [];
+    const webpFiles = new Set();
+
     for (const f of files) {
       const ext = path.extname(f).toLowerCase();
       const filePath = path.join(categoryPath, f);
@@ -61,6 +63,12 @@ async function scanLocalImages() {
       // Convert to WebP if not already WebP/SVG
       if (CONVERTIBLE_EXTENSIONS.includes(ext)) {
         webpFile = await convertToWebP(filePath);
+        if (webpFile) webpFiles.add(webpFile);
+      }
+
+      // Skip WebP files if we generated them from an original
+      if (ext === '.webp' && webpFiles.has(f)) {
+        continue;
       }
 
       images.push({
