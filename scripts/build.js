@@ -367,7 +367,11 @@ async function main() {
   const WORKER_FILE = path.join(__dirname, '..', '_worker.js');
   if (fs.existsSync(WORKER_FILE)) {
     let content = fs.readFileSync(WORKER_FILE, 'utf-8');
-    content = content.replace(/IMAGES_DATA_PLACEHOLDER/g, JSON.stringify(output));
+    // Replace placeholder or existing embedded data
+    content = content.replace(
+      /IMAGES_DATA = \{[^;]+\};/g,
+      `IMAGES_DATA = ${JSON.stringify(output)};`
+    );
     fs.writeFileSync(WORKER_FILE, content);
     console.log('  ✓ Generated _worker.js');
   }
