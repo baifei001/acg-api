@@ -2,14 +2,38 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const http = require('http');
+const sharp = require('sharp');
 
 const IMAGES_DIR = path.join(__dirname, '..', 'images');
 const EXTERNAL_CONFIG = path.join(__dirname, '..', 'data', 'external.json');
 const OUTPUT_FILE = path.join(__dirname, '..', 'data', 'images.json');
 
 const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp'];
+const CONVERTIBLE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.bmp'];
 
-function scanLocalImages() {
+async function convertToWebP(inputPath) {
+  const ext = path.extname(inputPath).toLowerCase();
+  if (!CONVERTIBLE_EXTENSIONS.includes(ext)) return null;
+
+  const outputPath = inputPath.replace(/\.[^.]+$/, '.webp');
+  if (fs.existsSync(outputPath)) return path.basename(outputPath);
+
+  try {
+    await sharp(inputPath)
+      .webp({ quality: 80 })
+      .toFile(outputPath);
+    const origSize = fs.statSync(inputPath).size;
+    const webpSize = fs.statSync(outputPath).size;
+    const saved = Math.round((1 - webpSize / origSize) * 100);
+    console.log(`    → ${path.basename(outputPath)} (saved ${saved}%)`);
+    return path.basename(outputPath);
+  } catch (e) {
+    console.error(`    → conversion failed: ${e.message}`);
+    return null;
+  }
+}
+
+async function scanLocalImages() {
   const categories = {};
   if (!fs.existsSync(IMAGES_DIR)) {
     console.log('  No images/ directory found, skipping local scan');
@@ -26,15 +50,29 @@ function scanLocalImages() {
       .filter(f => {
         const ext = path.extname(f).toLowerCase();
         return IMAGE_EXTENSIONS.includes(ext);
-      })
-      .map(f => ({
-        url: `images/${category}/${f}`,
-        type: 'local'
-      }));
+      });
 
-    if (files.length > 0) {
-      categories[category] = files;
-      console.log(`  ✓ ${category}: ${files.length} images`);
+    const images = [];
+    for (const f of files) {
+      const ext = path.extname(f).toLowerCase();
+      const filePath = path.join(categoryPath, f);
+      let webpFile = null;
+
+      // Convert to WebP if not already WebP/SVG
+      if (CONVERTIBLE_EXTENSIONS.includes(ext)) {
+        webpFile = await convertToWebP(filePath);
+      }
+
+      images.push({
+        url: `images/${category}/${webpFile || f}`,
+        original: webpFile ? `images/${category}/${f}` : null,
+        type: 'local'
+      });
+    }
+
+    if (images.length > 0) {
+      categories[category] = images;
+      console.log(`  ✓ ${category}: ${images.length} images`);
     }
   }
 
@@ -136,9 +174,9 @@ async function fetchAllExternalSources() {
 async function main() {
   console.log('Building image index...\n');
 
-  // Scan local images
+  // Scan local images (with WebP conversion)
   console.log('Scanning local images:');
-  const localCategories = scanLocalImages();
+  const localCategories = await scanLocalImages();
 
   // Fetch external sources
   console.log('\nFetching external sources:');

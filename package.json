@@ -1,0 +1,27 @@
+{
+  "name": "acg-api",
+  "version": "1.0.0",
+  "description": "基于 GitHub Pages 的随机图片接口，支持 JSON 响应和客户端跳转。",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build": "node scripts/build.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/baifei001/acg-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/baifei001/acg-api/issues"
+  },
+  "homepage": "https://github.com/baifei001/acg-api#readme",
+  "dependencies": {
+    "sharp": "^0.34.5"
+  }
+}
