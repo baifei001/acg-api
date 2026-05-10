@@ -109,7 +109,9 @@
 
     <div class="section">
       <h2>Quick Start</h2>
-      <p>Get a random image as JSON:</p>
+      <p>Get a random image as JSON (truly random, different result each call):</p>
+      <pre>curl https://acg-api.pages.dev/api/random</pre>
+      <p>Get a random image as JSON (static file, same result):</p>
       <pre>curl https://<span id="hostname">username.github.io</span>/acg-api/api/random.json</pre>
       <p>Jump directly to a random image:</p>
       <pre>https://<span id="hostname2">username.github.io</span>/acg-api/img/random.html</pre>
@@ -118,16 +120,20 @@
     <div class="section">
       <h2>API Endpoints</h2>
       <div class="endpoint">
-        <div class="path">GET /api/random.json</div>
-        <div class="desc">Return a random image as JSON.</div>
+        <div class="path">GET /api/random or /api/random.json</div>
+        <div class="desc">Return a random image as JSON. Cloudflare Pages returns different results each time, GitHub Pages returns the same result.</div>
       </div>
       <div class="endpoint">
-        <div class="path">GET /api/{category}.json</div>
+        <div class="path">GET /api/{category} or /api/{category}.json</div>
         <div class="desc">Return a random image from a specific category as JSON.</div>
       </div>
       <div class="endpoint">
-        <div class="path">GET /api/categories.json</div>
+        <div class="path">GET /api/categories or /api/categories.json</div>
         <div class="desc">Return all categories with image counts.</div>
+      </div>
+      <div class="endpoint">
+        <div class="path">GET /api/random?size=N</div>
+        <div class="desc">Get N random images at once (max 20).</div>
       </div>
       <div class="endpoint">
         <div class="path">GET /img/random.html</div>
@@ -154,7 +160,13 @@
 
     <div class="section">
       <h2>Usage Examples</h2>
-      <pre># curl static files
+      <pre># Cloudflare Pages - truly random (different result each call)
+curl https://acg-api.pages.dev/api/random
+curl https://acg-api.pages.dev/api/random?size=5
+curl https://acg-api.pages.dev/api/anime
+curl https://acg-api.pages.dev/api/categories
+
+# GitHub Pages - static files (same result)
 curl https://<span id="hostname3">username.github.io</span>/acg-api/api/random.json
 curl https://<span id="hostname4">username.github.io</span>/acg-api/api/anime.json
 curl https://<span id="hostname5">username.github.io</span>/acg-api/api/categories.json

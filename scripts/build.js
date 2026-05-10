@@ -348,6 +348,30 @@ async function main() {
     console.log('  ✓ Generated .nojekyll');
   }
 
+  // Generate Cloudflare Pages Functions with embedded data
+  const FUNCTIONS_DIR = path.join(__dirname, '..', 'functions', 'api');
+  if (fs.existsSync(FUNCTIONS_DIR)) {
+    const funcFiles = ['random.js', 'categories.js', '[category].js'];
+    for (const funcFile of funcFiles) {
+      const funcPath = path.join(FUNCTIONS_DIR, funcFile);
+      if (fs.existsSync(funcPath)) {
+        let content = fs.readFileSync(funcPath, 'utf-8');
+        content = content.replace('IMAGES_DATA_PLACEHOLDER', JSON.stringify(output));
+        fs.writeFileSync(funcPath, content);
+      }
+    }
+    console.log('  ✓ Generated Cloudflare Functions');
+  }
+
+  // Generate _worker.js with embedded data
+  const WORKER_FILE = path.join(__dirname, '..', '_worker.js');
+  if (fs.existsSync(WORKER_FILE)) {
+    let content = fs.readFileSync(WORKER_FILE, 'utf-8');
+    content = content.replace(/IMAGES_DATA_PLACEHOLDER/g, JSON.stringify(output));
+    fs.writeFileSync(WORKER_FILE, content);
+    console.log('  ✓ Generated _worker.js');
+  }
+
   // Print summary
   const totalImages = Object.values(allCategories).reduce((sum, imgs) => sum + imgs.length, 0);
   const totalCategories = Object.keys(allCategories).length;
