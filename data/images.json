@@ -1,11 +1,21 @@
 {
   "version": 1,
-  "generated": "2026-05-10T06:27:08.238Z",
+  "generated": "2026-05-10T06:47:19.136Z",
   "categories": {
     "anime": [
       {
         "url": "images/anime/20260510_132059_01.webp",
         "original": "images/anime/20260510_132059_01.png",
+        "type": "local"
+      },
+      {
+        "url": "images/anime/20260510_132059_01.webp",
+        "original": null,
+        "type": "local"
+      },
+      {
+        "url": "images/anime/20260510_143002_01.webp",
+        "original": "images/anime/20260510_143002_01.png",
         "type": "local"
       }
     ]
