@@ -112,7 +112,7 @@
       <p>获取随机图片 JSON：</p>
       <pre>curl https://<span id="hostname">username.github.io</span>/acg-api/api/random.json</pre>
       <p>直接跳转到随机图片：</p>
-      <pre>https://<span id="hostname2">username.github.io</span>/acg-api/img/random</pre>
+      <pre>https://<span id="hostname2">username.github.io</span>/acg-api/img/random.html</pre>
     </div>
 
     <div class="section">
@@ -130,8 +130,12 @@
         <div class="desc">返回所有分类及图片数量。</div>
       </div>
       <div class="endpoint">
-        <div class="path">GET /img/random</div>
+        <div class="path">GET /img/random.html</div>
         <div class="desc">浏览器直接跳转到随机图片。</div>
+      </div>
+      <div class="endpoint">
+        <div class="path">GET /img/{category}.html</div>
+        <div class="desc">浏览器跳转到指定分类的随机图片。</div>
       </div>
     </div>
 
@@ -219,7 +223,7 @@ curl https://<span id="hostname5">username.github.io</span>/acg-api/api/categori
     }
 
     function testRedirect() {
-      window.open(getBaseUrl() + '/?api=img', '_blank');
+      window.open(getBaseUrl() + '/img/random.html', '_blank');
     }
   </script>
 </body>

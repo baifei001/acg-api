@@ -20,7 +20,10 @@ curl https://your-username.github.io/acg-api/api/categories.json
 ```
 
 ### 直接跳转到随机图片
-浏览器访问：`https://your-username.github.io/acg-api/img/random`
+浏览器访问：`https://your-username.github.io/acg-api/img/random.html`
+
+### 按分类跳转
+浏览器访问：`https://your-username.github.io/acg-api/img/anime.html`
 
 ## 添加图片
 
