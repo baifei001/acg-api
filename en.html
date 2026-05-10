@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ACG API - 随机图片接口</title>
+  <title>ACG API - Random Image API</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Microsoft YaHei', sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, monospace;
       background: #0f0f23;
       color: #e0e0e0;
       min-height: 100vh;
@@ -103,49 +103,49 @@
 </head>
 <body>
   <div class="container">
-    <div class="lang-switch"><a href="en.html">English</a></div>
+    <div class="lang-switch"><a href="index.html">中文</a></div>
     <h1>ACG API</h1>
-    <p class="subtitle">随机图片接口 - JSON 响应 & 客户端跳转</p>
+    <p class="subtitle">Random Image API - JSON responses & client-side redirects</p>
 
     <div class="section">
-      <h2>快速开始</h2>
-      <p>获取随机图片 JSON：</p>
-      <pre>curl https://<span id="hostname">username.github.io</span>/acg-api/api/random</p>
-      <p>直接跳转到随机图片：</p>
+      <h2>Quick Start</h2>
+      <p>Get a random image as JSON:</p>
+      <pre>curl https://<span id="hostname">username.github.io</span>/acg-api/api/random</pre>
+      <p>Jump directly to a random image:</p>
       <pre>https://<span id="hostname2">username.github.io</span>/acg-api/img/random</pre>
     </div>
 
     <div class="section">
-      <h2>API 端点</h2>
+      <h2>API Endpoints</h2>
       <div class="endpoint">
         <div class="path">GET /api/random</div>
-        <div class="desc">返回随机图片 JSON。添加 <code>?category=anime</code> 按分类筛选，<code>&size=5</code> 获取多张。</div>
+        <div class="desc">Return a random image as JSON. Add <code>?category=anime</code> to filter by category, <code>&size=5</code> for multiple.</div>
       </div>
       <div class="endpoint">
         <div class="path">GET /api/categories</div>
-        <div class="desc">返回所有分类及图片数量。</div>
+        <div class="desc">Return all categories with image counts.</div>
       </div>
       <div class="endpoint">
         <div class="path">GET /img/random</div>
-        <div class="desc">直接跳转到随机图片。添加 <code>?category=anime</code> 按分类筛选。</div>
+        <div class="desc">Redirect to a random image. Add <code>?category=anime</code> to filter.</div>
       </div>
     </div>
 
     <div class="section">
-      <h2>分类统计</h2>
-      <div class="stats" id="stats">加载中...</div>
+      <h2>Categories</h2>
+      <div class="stats" id="stats">Loading...</div>
     </div>
 
     <div class="section">
-      <h2>在线测试</h2>
-      <button class="btn" onclick="testRandom()">随机图片 (JSON)</button>
-      <button class="btn" onclick="testCategories()">获取分类</button>
-      <button class="btn" onclick="testRedirect()">随机跳转</button>
+      <h2>Test</h2>
+      <button class="btn" onclick="testRandom()">Random Image (JSON)</button>
+      <button class="btn" onclick="testCategories()">Get Categories</button>
+      <button class="btn" onclick="testRedirect()">Random Redirect</button>
       <div id="test-result" class="test-result"></div>
     </div>
 
     <div class="section">
-      <h2>使用示例</h2>
+      <h2>Usage Examples</h2>
       <pre>curl https://<span id="hostname3">username.github.io</span>/acg-api/api/random
 
 curl https://<span id="hostname4">username.github.io</span>/acg-api/api/random?category=anime
@@ -156,10 +156,10 @@ curl https://<span id="hostname6">username.github.io</span>/acg-api/api/categori
     </div>
 
     <div class="section">
-      <h2>添加图片</h2>
-      <p>1. 将图片放入 <code>images/分类名/</code> 目录</p>
-      <p>2. Push 到 main 分支</p>
-      <p>3. GitHub Actions 自动更新索引</p>
+      <h2>Adding Images</h2>
+      <p>1. Place images in <code>images/category/</code> directory</p>
+      <p>2. Push to main branch</p>
+      <p>3. GitHub Actions auto-updates the index</p>
     </div>
   </div>
 
@@ -174,19 +174,19 @@ curl https://<span id="hostname6">username.github.io</span>/acg-api/api/categori
         const statsEl = document.getElementById('stats');
         const categories = Object.entries(data.categories);
         if (categories.length === 0) {
-          statsEl.innerHTML = '<div class="stat-card"><div class="count">0</div><div class="label">暂无图片</div></div>';
+          statsEl.innerHTML = '<div class="stat-card"><div class="count">0</div><div class="label">No images yet</div></div>';
           return;
         }
         const total = categories.reduce((sum, [, imgs]) => sum + imgs.length, 0);
         statsEl.innerHTML = `
-          <div class="stat-card"><div class="count">${total}</div><div class="label">总计</div></div>
+          <div class="stat-card"><div class="count">${total}</div><div class="label">Total</div></div>
           ${categories.map(([name, imgs]) =>
             `<div class="stat-card"><div class="count">${imgs.length}</div><div class="label">${name}</div></div>`
           ).join('')}
         `;
       })
       .catch(() => {
-        document.getElementById('stats').innerHTML = '<div class="stat-card"><div class="count">?</div><div class="label">加载失败</div></div>';
+        document.getElementById('stats').innerHTML = '<div class="stat-card"><div class="count">?</div><div class="label">Could not load</div></div>';
       });
 
     function showResult(el, success, text) {
