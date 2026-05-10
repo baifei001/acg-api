@@ -341,6 +341,13 @@ async function main() {
     }
   }
 
+  // Generate .nojekyll to prevent GitHub Pages Jekyll processing
+  const NOJEKYLL_FILE = path.join(__dirname, '..', '.nojekyll');
+  if (!fs.existsSync(NOJEKYLL_FILE)) {
+    fs.writeFileSync(NOJEKYLL_FILE, '');
+    console.log('  ✓ Generated .nojekyll');
+  }
+
   // Print summary
   const totalImages = Object.values(allCategories).reduce((sum, imgs) => sum + imgs.length, 0);
   const totalCategories = Object.keys(allCategories).length;

@@ -23,6 +23,10 @@ function errorResponse(code, message, status = 404) {
   return jsonResponse({ code, message }, status);
 }
 
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
 async function handleApiRandom(params) {
   const data = await loadImageData();
   const category = params.get('category');
@@ -87,14 +91,16 @@ async function handleImgRandom(params) {
 
   const selected = pool[Math.floor(Math.random() * pool.length)];
   const url = getAbsoluteUrl(selected.url);
+  const escapedUrl = escapeHtml(url);
+  const jsUrl = JSON.stringify(url);
 
   return new Response(`<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"><title>Redirecting...</title></head>
 <body>
-<script>window.location.replace("${url}");</script>
-<noscript><meta http-equiv="refresh" content="0;url=${url}"></noscript>
-<p>Redirecting to <a href="${url}">${url}</a>...</p>
+<script>window.location.replace(${jsUrl});</script>
+<noscript><meta http-equiv="refresh" content="0;url=${escapedUrl}"></noscript>
+<p>Redirecting to <a href="${escapedUrl}">${escapedUrl}</a>...</p>
 </body>
 </html>`, {
     headers: { 'Content-Type': 'text/html; charset=utf-8' }

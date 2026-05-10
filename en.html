@@ -158,13 +158,17 @@
 
 curl https://<span id="hostname4">username.github.io</span>/acg-api/api/anime.json
 
-curl https://<span id="hostname5">username.github.io</span>/acg-api/api/categories.json</pre>
+curl "https://<span id="hostname5">username.github.io</span>/acg-api/api/random.json?size=5"
+
+curl "https://<span id="hostname6">username.github.io</span>/acg-api/api/random.json?category=anime&size=3"
+
+curl https://<span id="hostname7">username.github.io</span>/acg-api/api/categories.json</pre>
     </div>
 
     <div class="section">
       <h2>Adding Images</h2>
       <p>1. Place images in <code>images/category/</code> directory</p>
-      <p>2. Push to main branch</p>
+      <p>2. Push to master branch</p>
       <p>3. GitHub Actions auto-updates the index</p>
     </div>
   </div>

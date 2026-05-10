@@ -6,35 +6,44 @@
 
 ### 获取随机图片（JSON）
 ```bash
-curl https://your-username.github.io/acg-api/api/random.json
+curl https://baifei001.github.io/acg-api/api/random.json
 ```
 
 ### 按分类获取随机图片
 ```bash
-curl https://your-username.github.io/acg-api/api/anime.json
+curl https://baifei001.github.io/acg-api/api/anime.json
+```
+
+### 批量获取随机图片
+```bash
+# 获取 5 张随机图片
+curl "https://baifei001.github.io/acg-api/api/random.json?size=5"
+
+# 获取指定分类的 3 张图片
+curl "https://baifei001.github.io/acg-api/api/random.json?category=anime&size=3"
 ```
 
 ### 获取所有分类
 ```bash
-curl https://your-username.github.io/acg-api/api/categories.json
+curl https://baifei001.github.io/acg-api/api/categories.json
 ```
 
 ### 直接跳转到随机图片
-浏览器访问：`https://your-username.github.io/acg-api/img/random.html`
+浏览器访问：`https://baifei001.github.io/acg-api/img/random.html`
 
 ### 按分类跳转
-浏览器访问：`https://your-username.github.io/acg-api/img/anime.html`
+浏览器访问：`https://baifei001.github.io/acg-api/img/anime.html`
 
 ## 添加图片
 
 ### 本地图片
 1. 将图片放入 `images/分类名/` 目录
-2. Push 到 main 分支
+2. Push 到 master 分支
 3. GitHub Actions 自动更新索引
 
 ### 外部源
 1. 编辑 `data/external.json`，添加外部 API 配置
-2. Push 到 main 分支
+2. Push 到 master 分支
 
 ## 开发
 
