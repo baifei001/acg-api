@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-05-10T14:44:11.223Z",
+  "generated": "2026-05-10T14:48:07.772Z",
   "categories": {
     "anime": [
       {
@@ -51,6 +51,11 @@
       {
         "url": "images/anime/20260510_223711_01.webp",
         "original": "images/anime/20260510_223711_01.png",
+        "type": "local"
+      },
+      {
+        "url": "images/anime/20260510_224553_01.webp",
+        "original": "images/anime/20260510_224553_01.png",
         "type": "local"
       }
     ]
