@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ACG API - Random Image API</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, monospace;
+      background: #0f0f23;
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    .container { max-width: 800px; margin: 0 auto; }
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .subtitle { color: #888; margin-bottom: 40px; font-size: 1.1em; }
+    .section { margin-bottom: 32px; }
+    .section h2 {
+      font-size: 1.3em;
+      margin-bottom: 16px;
+      color: #667eea;
+      border-bottom: 1px solid #333;
+      padding-bottom: 8px;
+    }
+    .endpoint {
+      background: #16213e;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border-left: 3px solid #667eea;
+    }
+    .endpoint .path {
+      font-family: monospace;
+      color: #667eea;
+      font-size: 1.1em;
+      margin-bottom: 8px;
+    }
+    .endpoint .desc { color: #aaa; font-size: 0.9em; }
+    code {
+      background: #1a1a3e;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.9em;
+    }
+    pre {
+      background: #16213e;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 12px 0;
+      line-height: 1.5;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .stat-card {
+      background: #16213e;
+      padding: 16px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .stat-card .count { font-size: 2em; color: #667eea; }
+    .stat-card .label { color: #888; font-size: 0.9em; }
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1em;
+      text-decoration: none;
+      margin: 4px;
+    }
+    .btn:hover { opacity: 0.9; }
+    .test-result {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      display: none;
+    }
+    .test-result.success { background: #1a3a1a; display: block; }
+    .test-result.error { background: #3a1a1a; display: block; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>ACG API</h1>
+    <p class="subtitle">Random Image API - JSON responses & client-side redirects</p>
+
+    <div class="section">
+      <h2>Quick Start</h2>
+      <p>Get a random image as JSON:</p>
+      <pre>curl https://<span id="hostname">username.github.io</span>/acg-api/api/random</pre>
+      <p>Jump directly to a random image:</p>
+      <pre>https://<span id="hostname2">username.github.io</span>/acg-api/img/random</pre>
+    </div>
+
+    <div class="section">
+      <h2>API Endpoints</h2>
+      <div class="endpoint">
+        <div class="path">GET /api/random</div>
+        <div class="desc">Return a random image as JSON. Add <code>?category=anime</code> to filter by category, <code>&size=5</code> for multiple.</div>
+      </div>
+      <div class="endpoint">
+        <div class="path">GET /api/categories</div>
+        <div class="desc">Return all categories with image counts.</div>
+      </div>
+      <div class="endpoint">
+        <div class="path">GET /img/random</div>
+        <div class="desc">Redirect to a random image. Add <code>?category=anime</code> to filter.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Categories</h2>
+      <div class="stats" id="stats">Loading...</div>
+    </div>
+
+    <div class="section">
+      <h2>Test</h2>
+      <button class="btn" onclick="testRandom()">Get Random Image (JSON)</button>
+      <button class="btn" onclick="testCategories()">Get Categories</button>
+      <button class="btn" onclick="testRedirect()">Random Image Redirect</button>
+      <div id="test-result" class="test-result"></div>
+    </div>
+
+    <div class="section">
+      <h2>Usage Examples</h2>
+      <pre>curl https://<span id="hostname3">username.github.io</span>/acg-api/api/random
+
+curl https://<span id="hostname4">username.github.io</span>/acg-api/api/random?category=anime
+
+curl https://<span id="hostname5">username.github.io</span>/acg-api/api/random?category=anime&size=5
+
+curl https://<span id="hostname6">username.github.io</span>/acg-api/api/categories</pre>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script>
+    const host = window.location.host;
+    document.querySelectorAll('[id^="hostname"]').forEach(el => el.textContent = host);
+
+    fetch(getDataUrl())
+      .then(r => r.json())
+      .then(data => {
+        const statsEl = document.getElementById('stats');
+        const categories = Object.entries(data.categories);
+        if (categories.length === 0) {
+          statsEl.innerHTML = '<div class="stat-card"><div class="count">0</div><div class="label">No images yet</div></div>';
+          return;
+        }
+        const total = categories.reduce((sum, [, imgs]) => sum + imgs.length, 0);
+        statsEl.innerHTML = `
+          <div class="stat-card"><div class="count">${total}</div><div class="label">Total</div></div>
+          ${categories.map(([name, imgs]) =>
+            `<div class="stat-card"><div class="count">${imgs.length}</div><div class="label">${name}</div></div>`
+          ).join('')}
+        `;
+      })
+      .catch(() => {
+        document.getElementById('stats').innerHTML = '<div class="stat-card"><div class="count">?</div><div class="label">Could not load</div></div>';
+      });
+
+    function showResult(el, success, text) {
+      el.className = 'test-result ' + (success ? 'success' : 'error');
+      el.textContent = text;
+    }
+
+    async function testRandom() {
+      const el = document.getElementById('test-result');
+      try {
+        const r = await fetch(getBaseUrl() + '/api/random');
+        const data = await r.json();
+        showResult(el, data.code === 200, JSON.stringify(data, null, 2));
+      } catch (e) {
+        showResult(el, false, e.message);
+      }
+    }
+
+    async function testCategories() {
+      const el = document.getElementById('test-result');
+      try {
+        const r = await fetch(getBaseUrl() + '/api/categories');
+        const data = await r.json();
+        showResult(el, data.code === 200, JSON.stringify(data, null, 2));
+      } catch (e) {
+        showResult(el, false, e.message);
+      }
+    }
+
+    function testRedirect() {
+      window.open(getBaseUrl() + '/img/random', '_blank');
+    }
+  </script>
+</body>
+</html>
