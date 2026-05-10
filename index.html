@@ -197,7 +197,7 @@ curl https://<span id="hostname6">username.github.io</span>/acg-api/api/categori
     async function testRandom() {
       const el = document.getElementById('test-result');
       try {
-        const r = await fetch(getBaseUrl() + '/?api=random');
+        const r = await fetch(getBaseUrl() + '/api/random.json');
         const data = await r.json();
         showResult(el, data.code === 200, JSON.stringify(data, null, 2));
       } catch (e) {
@@ -208,7 +208,7 @@ curl https://<span id="hostname6">username.github.io</span>/acg-api/api/categori
     async function testCategories() {
       const el = document.getElementById('test-result');
       try {
-        const r = await fetch(getBaseUrl() + '/?api=categories');
+        const r = await fetch(getBaseUrl() + '/api/categories.json');
         const data = await r.json();
         showResult(el, data.code === 200, JSON.stringify(data, null, 2));
       } catch (e) {

@@ -169,6 +169,45 @@ async function main() {
 
   fs.writeFileSync(OUTPUT_FILE, JSON.stringify(output, null, 2) + '\n');
 
+  // Generate static API JSON files for curl access
+  const API_DIR = path.join(__dirname, '..', 'api');
+  if (!fs.existsSync(API_DIR)) {
+    fs.mkdirSync(API_DIR, { recursive: true });
+  }
+
+  const allImages = Object.entries(allCategories).flatMap(([cat, imgs]) =>
+    imgs.map(img => ({
+      url: img.url.startsWith('http') ? img.url : `https://baifei001.github.io/acg-api/${img.url}`,
+      category: cat,
+      type: img.type
+    }))
+  );
+
+  // api/random.json
+  if (allImages.length > 0) {
+    const randomImg = allImages[Math.floor(Math.random() * allImages.length)];
+    fs.writeFileSync(path.join(API_DIR, 'random.json'), JSON.stringify({ code: 200, data: randomImg }, null, 2) + '\n');
+  } else {
+    fs.writeFileSync(path.join(API_DIR, 'random.json'), JSON.stringify({ code: 404, message: 'No images available' }, null, 2) + '\n');
+  }
+
+  // api/categories.json
+  const catList = Object.entries(allCategories).map(([name, imgs]) => ({ name, count: imgs.length }));
+  fs.writeFileSync(path.join(API_DIR, 'categories.json'), JSON.stringify({ code: 200, data: catList }, null, 2) + '\n');
+
+  // api/{category}.json for each category
+  for (const [category, images] of Object.entries(allCategories)) {
+    const catImages = images.map(img => ({
+      url: img.url.startsWith('http') ? img.url : `https://baifei001.github.io/acg-api/${img.url}`,
+      category,
+      type: img.type
+    }));
+    if (catImages.length > 0) {
+      const randomImg = catImages[Math.floor(Math.random() * catImages.length)];
+      fs.writeFileSync(path.join(API_DIR, `${category}.json`), JSON.stringify({ code: 200, data: randomImg }, null, 2) + '\n');
+    }
+  }
+
   // Print summary
   const totalImages = Object.values(allCategories).reduce((sum, imgs) => sum + imgs.length, 0);
   const totalCategories = Object.keys(allCategories).length;
