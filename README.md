@@ -6,22 +6,17 @@
 
 ### 获取随机图片（JSON）
 ```bash
-curl https://your-username.github.io/acg-api/api/random
+curl https://your-username.github.io/acg-api/api/random.json
 ```
 
 ### 按分类获取随机图片
 ```bash
-curl https://your-username.github.io/acg-api/api/random?category=anime
-```
-
-### 获取多张随机图片
-```bash
-curl https://your-username.github.io/acg-api/api/random?category=anime&size=5
+curl https://your-username.github.io/acg-api/api/anime.json
 ```
 
 ### 获取所有分类
 ```bash
-curl https://your-username.github.io/acg-api/api/categories
+curl https://your-username.github.io/acg-api/api/categories.json
 ```
 
 ### 直接跳转到随机图片
