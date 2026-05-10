@@ -1,20 +1,10 @@
 {
   "version": 1,
-  "generated": "2026-05-10T04:52:12.334Z",
+  "generated": "2026-05-10T05:26:25.226Z",
   "categories": {
     "anime": [
       {
-        "url": "images/anime/test.png",
-        "type": "local"
-      }
-    ],
-    "landscape": [
-      {
-        "url": "images/landscape/test1.png",
-        "type": "local"
-      },
-      {
-        "url": "images/landscape/test2.png",
+        "url": "images/anime/20260510_132059_01.png",
         "type": "local"
       }
     ]
