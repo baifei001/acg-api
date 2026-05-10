@@ -109,25 +109,30 @@ async function route() {
   // Handle SPA redirect from 404.html
   const spaParam = params.get('spa');
   if (spaParam) {
-    const spaUrl = new URL(spaParam, window.location.origin);
-    pathname = spaUrl.pathname.replace(/\/+$/, '') || '/';
-    // Merge query parameters from the original path
-    spaUrl.searchParams.forEach((v, k) => params.set(k, v));
+    try {
+      const spaUrl = new URL(spaParam, window.location.origin);
+      pathname = spaUrl.pathname.replace(/\/+$/, '') || '/';
+      spaUrl.searchParams.forEach((v, k) => params.set(k, v));
+    } catch (e) {}
   }
 
   try {
-    if (pathname.endsWith('/api/random')) {
-      return await handleApiRandom(params);
-    }
-    if (pathname.endsWith('/api/categories')) {
-      return await handleApiCategories();
-    }
-    if (pathname.endsWith('/img/random')) {
-      return await handleImgRandom(params);
-    }
+    // Query parameter API (for fetch/programmatic calls)
+    const api = params.get('api');
+    if (api === 'random') return await handleApiRandom(params);
+    if (api === 'categories') return await handleApiCategories();
+    if (api === 'img') return await handleImgRandom(params);
+
+    // Path-based API (for browser address bar, via 404.html SPA redirect)
+    if (pathname.endsWith('/api/random')) return await handleApiRandom(params);
+    if (pathname.endsWith('/api/categories')) return await handleApiCategories();
+    if (pathname.endsWith('/img/random')) return await handleImgRandom(params);
+
+    // Home page
     if (pathname === '/' || pathname === getBaseUrl() || pathname === getBaseUrl() + '/') {
       return await handleRoot();
     }
+
     return errorResponse(404, 'Not found');
   } catch (err) {
     return errorResponse(500, err.message, 500);
@@ -138,6 +143,7 @@ async function handleRoot() {
   return null;
 }
 
+// Init
 (async function() {
   const response = await route();
   if (response) {
@@ -163,7 +169,7 @@ async function handleRoot() {
 </head>
 <body>
   <pre class="${json.includes('"code": 4') || json.includes('"code": 5') ? 'error' : ''}">${json}</pre>
-  <p><a href="${getBaseUrl()}/">← Back to API docs</a></p>
+  <p><a href="${getBaseUrl()}/">← 返回 API 文档</a></p>
 </body>
 </html>`);
       document.close();
